@@ -1,4 +1,4 @@
-import { registry } from '../../../core/registry';
+import Registry from '../../../core/registry';
 import {
     userSchema,
     createUserSchema,
@@ -8,9 +8,11 @@ import {
 } from './schema';
 import {z} from "zod";
 
-export function registerUserRoutes() {
+export function registerUserRoutes(registry: Registry) {
     registry.register({
-        method: 'get',
+        name: 'listUsers',
+        method: 'GET',
+        version: 'v1',
         path: '/v1/users',
         description: 'List all users',
         request: {
@@ -34,8 +36,10 @@ export function registerUserRoutes() {
 
 
     registry.register({
-        method: 'get',
+        name: 'getUser',
+        method: 'GET',
         path: '/v1/users/:id',
+        version: 'v1',
         description: 'Get a user by ID',
         request: {
             params: z.object({
@@ -54,8 +58,10 @@ export function registerUserRoutes() {
 
 
     registry.register({
-        method: 'post',
+        name: 'createUser',
+        method: 'POST',
         path: '/v1/users',
+        version: 'v1',
         description: 'Create a new user',
         request: {
             body: createUserSchema
@@ -71,8 +77,10 @@ export function registerUserRoutes() {
 
 
     registry.register({
-        method: 'put',
+        name: 'updateUser',
+        method: 'PUT',
         path: '/v1/users/:id',
+        version: 'v1',
         description: 'Update a user',
         request: {
             params: z.object({
@@ -91,7 +99,9 @@ export function registerUserRoutes() {
 
 
     registry.register({
-        method: 'delete',
+        name: 'deleteUser',
+        method: 'DELETE',
+        version: 'v1',
         path: '/v1/users/:id',
         description: 'Delete a user',
         request: {
@@ -109,7 +119,9 @@ export function registerUserRoutes() {
     })
 
     registry.register({
-        method: 'get',
+        name: 'getUserPosts',
+        method: 'GET',
+        version: 'v1',
         path: '/v1/users/:userId/posts',
         description: 'Get posts for a user',
         request: {

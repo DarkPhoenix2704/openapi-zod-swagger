@@ -1,29 +1,39 @@
 import { z } from 'zod';
+import { AxiosRequestConfig } from 'axios';
 
-export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-export type InferZodType<T extends z.ZodType | undefined> =
-    T extends z.ZodType ? z.infer<T> : never;
-
-export interface RouteConfig<
-    TParams extends z.ZodType | undefined = undefined,
-    TQuery extends z.ZodType | undefined = undefined,
-    TBody extends z.ZodType | undefined = undefined,
-    TResponse extends z.ZodType | undefined = undefined
-> {
+export interface RouteConfig<TParams, TQuery, TBody, TResponse> {
+    name: string;
     method: HttpMethod;
+    version: string;
     path: string;
-    description?: string;
+    description: string;
     request?: {
-        params?: TParams;
-        query?: TQuery;
-        body?: TBody;
+        params?: z.ZodType<TParams>;
+        query?: z.ZodType<TQuery>;
+        body?: z.ZodType<TBody>;
     };
     responses: {
         [statusCode: number]: {
             description: string;
-            schema: TResponse;
+            schema: z.ZodType<TResponse>;
         };
     };
-    tags?: string[];
+    tags: string[];
+}
+
+export type RouteFunction<TParams, TQuery, TBody, TResponse> = (
+    params?: TParams,
+    query?: TQuery,
+    body?: TBody,
+    config?: AxiosRequestConfig
+) => Promise<TResponse>;
+
+export interface VersionedApi {
+    [version: string]: {
+        [resource: string]: {
+            [name: string]: RouteFunction<any, any, any, any>;
+        };
+    };
 }

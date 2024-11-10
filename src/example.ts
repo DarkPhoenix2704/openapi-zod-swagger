@@ -1,9 +1,9 @@
-import {createClient} from "../dist";
+import {createApiClient} from "./index.ts";
 
 
-const client = createClient({
-    baseURL: "http://localhost:8080"
-});
+const client = createApiClient({
+    baseURL: 'https://api.example.com',
+})
 
 
-
+console.log(await client.v1.users.listUsers({}))
